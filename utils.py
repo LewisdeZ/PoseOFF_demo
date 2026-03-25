@@ -217,13 +217,29 @@ def flowpose_lk(frame1, frame2, poses, window_size=3, threshold=0.2, dilation=1,
     return flow_windows, p0, p1
 
 
-def draw_flow_windows(frame, p0, p1, only_middle=False, window_size=3, mag_threshold=20):
+def draw_flow_windows(frame, p0, p1, only_middle=False, window_size=3, mag_threshold=1000, mag_red=False):
+    '''Draw optical flow windows (PoseOFF) to a frame.
+
+    Args:
+        frame (np.array): RGB video frame to draw optical flow windows to.
+        p0 (np.array): Points representing the locations of pixels in PoseOFF window in frame zero.
+        p1 (np.array): Estimated location of pixels tracked using LK from to frame one.
+        only_middle (bool): If True, only draw the optical flow arrow centred at keypoints. Defaults to False.
+        window_size (int): The width/height of optical flow window extracted using PoseOFF. Defaults to 3.
+        mag_threshold (int): Optical flow vector magnitude above which will be discarded. Defaults to 1000.
+        mag_red (bool): If an optical flow arrow is above mag_threshold, draw as a red circle. If False, draw nothing. Defaults to False.
+
+    Returns:
+        A numpy array with PoseOFF window optical flow arrows drawn on it.
+    '''
     iterator = range((window_size**2)//2, p0.shape[0],(window_size**2)) if only_middle else range(p0.shape[0])
     for point_num in iterator:
         mag = (
             (p1[point_num].ravel()[0]-p0[point_num].ravel()[0])**2 +
             (p1[point_num].ravel()[1]-p0[point_num].ravel()[1])**2)**(0.5)
         if mag > mag_threshold:
+            if mag_red:
+                frame = cv2.circle(frame, p0[point_num].ravel().astype(int), radius=1, color=(0, 0, 255), thickness=-1)
             continue
         start = p0[point_num].ravel()
         end = p1[point_num].ravel()
