@@ -18,7 +18,7 @@ python -m venv ./env
 # Activate the environment
 source ./env/bin/activate
 # Install requirements, this may take some time!
-python pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 #### Windows
@@ -28,7 +28,7 @@ python -m venv ./env
 # Activate the environment, may change depending on if using CMD or PowerShell...
 .\env\Scripts\Activate.ps1 # You should see (env) at the front of your prompt
 # Install requirements, this may take some time!
-python pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 
