@@ -233,6 +233,7 @@ def draw_flow_windows(frame, p0, p1, only_middle=False, window_size=3, mag_thres
         A numpy array with PoseOFF window optical flow arrows drawn on it.
     '''
     iterator = range((window_size**2)//2, p0.shape[0],(window_size**2)) if only_middle else range(p0.shape[0])
+    arrow_color = (0, 255, 0) if frame.shape[-1] == 3 else (0, 255, 0, 255) # image transparency
     for point_num in iterator:
         mag = (
             (p1[point_num].ravel()[0]-p0[point_num].ravel()[0])**2 +
@@ -243,5 +244,5 @@ def draw_flow_windows(frame, p0, p1, only_middle=False, window_size=3, mag_thres
             continue
         start = p0[point_num].ravel()
         end = p1[point_num].ravel()
-        frame = cv2.arrowedLine(frame, start.astype(int), end.astype(int), (0, 255, 0), 1, tipLength=0.8)
+        frame = cv2.arrowedLine(frame, start.astype(int), end.astype(int), arrow_color, 1, tipLength=0.8)
     return frame
