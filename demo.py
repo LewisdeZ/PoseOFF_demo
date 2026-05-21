@@ -97,24 +97,28 @@ class Main:
                 print("Can't open frame")
                 break
             # Get the poses using YOLO
-            poses = get_poses(img2, pose_model, threshold=args.threshold)
+            # poses = get_poses(img2, pose_model, threshold=args.threshold)
 
             # Convert the frame to grey to prep for LK flow estimation
             img2_grey = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
-            # Calculate PoseOFF windows using LK flow
-            poseoff, p0, p1 = flowpose_lk(img1_grey, img2_grey, poses, window_size=args.window_size, dilation=args.dilation)
+            # TODO: DELETE THIS, IT's TEMPORARY!
+            norm_flow = get_norm_flows(img1_grey, img2_grey)
+            
+            # # Calculate PoseOFF windows using LK flow
+            # poseoff, p0, p1 = flowpose_lk(img1_grey, img2_grey, poses, window_size=args.window_size, dilation=args.dilation)
 
-            # Drawing utilities
-            img2 = draw_bones(img2, poses)
-            # img2 = draw_skel(img2, poses) # Uncomment this to draw the skeleton joint
-            img2 = draw_flow_windows(img2, p0, p1, only_middle=args.only_middle, window_size=args.window_size, mag_threshold=args.mag_threshold)
+            # # Drawing utilities
+            # img2 = draw_bones(img2, poses)
+            # # img2 = draw_skel(img2, poses) # Uncomment this to draw the skeleton joint
+            # img2 = draw_flow_windows(img2, p0, p1, only_middle=args.only_middle, window_size=args.window_size, mag_threshold=args.mag_threshold)
 
-            # Resize the input image...
-            img2 = cv2.resize(img2, (im_width*2, im_height*2))
+            # # Resize the input image...
+            # img2 = cv2.resize(img2, (im_width*2, im_height*2))
 
             # Show the frame
-            cv2.imshow('Frame', img2)
+            # cv2.imshow('Frame', img2)
+            cv2.imshow('Frame', norm_flow)
             if cv2.waitKey(1) == ord('q'):
                 break
 

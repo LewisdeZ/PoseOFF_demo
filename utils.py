@@ -7,7 +7,18 @@ import numpy as np
 import cv2
 
 
+def temporal_gradient_lsq():
+    '''Temporal gradient (I_t) least squares fit over N frames.'''
+    n = len(frames)
+    t = np.arange(n ,dtype=np.float32) - n // 2 # centred time axis
+    stack = np.stack([f.astype(np.float32) for f in frames], axis=0) # (N, H, W)
+    # Analytic least-squares slope: a = (sum(t_i * I_i) / (sum t_i^2))
+    denom = float((t ** 2).sum())
+    It = np.einsum('i,ihw->hw', t, stack) / denom
+    return It
+    
 def get_norm_flows(img1, img2, alpha=1):
+    '''Get the normal flow calculated between two images.'''
     # Calculate spatial gradients
     Ix = cv2.Sobel(img1, cv2.CV_64F, 1, 0, ksize=5)
     Iy = cv2.Sobel(img1, cv2.CV_64F, 0, 1, ksize=5)
